@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Grow - Social Media Growth</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #00ff9d;
+            --dark: #0f0c29;
+            --darker: #090717;
+            --text: #ffffff;
+            --shadow: 0 0 15px rgba(106, 17, 203, 0.7);
+            --glow: 0 0 10px rgba(0, 255, 157, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-shadow: var(--glow);
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+            color: var(--accent);
+            text-shadow: var(--glow);
+        }
+        
+        /* Auth Styles */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            animation: fadeIn 1s ease;
+        }
+        
+        .auth-box {
+            background: rgba(15, 12, 41, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), var(--shadow);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: var(--accent);
+            text-shadow: var(--glow);
+        }
+        
+        .auth-subtitle {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .google-btn {
+            background: #ffffff;
+            color: #4285F4;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+        }
+        
+        .google-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(66, 133, 244, 0.6);
+        }
+        
+        .google-btn i {
+            font-size: 24px;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(15, 12, 41, 0.6);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: var(--glow);
+        }
+        
+        .user-details h2 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .user-details p {
+            font-size: 18px;
+            color: var(--accent);
+            font-weight: 600;
+            text-shadow: var(--glow);
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite;
+        }
+        
+        .balance-label {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: rgba(15, 12, 41, 0.6);
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 16px;
+            background: transparent;
+            color: var(--text);
+            border: none;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            box-shadow: var(--glow);
+        }
+        
+        .nav-tab:hover:not(.active) {
+            background: rgba(106, 17, 203, 0.2);
+        }
+        
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .service-card {
+            background: rgba(15, 12, 41, 0.6);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5), var(--glow);
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(106, 17, 203, 0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+        
+        .service-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: var(--accent);
+            text-shadow: var(--glow);
+        }
+        
+        .service-name {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .service-description {
+            font-size: 15px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .service-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-item {
+            text-align: center;
+        }
+        
+        .detail-label {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .order-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .order-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.6), var(--glow);
+        }
+        
+        /* Add Funds Section */
+        .add-funds-container {
+            background: rgba(15, 12, 41, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .qr-placeholder {
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .min-deposit {
+            font-size: 16px;
+            background: rgba(0, 255, 157, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+            color: var(--accent);
+        }
+        
+        .payment-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(106, 17, 203, 0.5);
+            background: rgba(15, 12, 41, 0.3);
+            color: var(--text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: var(--glow);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            grid-column: span 2;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.6), var(--glow);
+        }
+        
+        /* Orders Section */
+        .orders-container {
+            background: rgba(15, 12, 41, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+            margin-bottom: 40px;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .orders-table th {
+            text-align: left;
+            padding: 15px;
+            background: rgba(106, 17, 203, 0.3);
+            font-weight: 600;
+            border-bottom: 2px solid rgba(0, 255, 157, 0.3);
+        }
+        
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-pending {
+            color: #ffcc00;
+        }
+        
+        .status-completed {
+            color: var(--accent);
+        }
+        
+        /* Support Button */
+        .support-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow), var(--glow);
+            cursor: pointer;
+            z-index: 100;
+            animation: pulse 2s infinite;
+            border: none;
+        }
+        
+        /* Popup Alert */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .popup-content {
+            background: rgba(15, 12, 41, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 50px rgba(106, 17, 203, 0.8), var(--glow);
+            border: 2px solid var(--accent);
+            text-align: center;
+            position: relative;
+        }
+        
+        .popup-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--accent);
+            text-shadow: var(--glow);
+        }
+        
+        .popup-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .close-popup {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Order Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: rgba(15, 12, 41, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 50px rgba(106, 17, 203, 0.8), var(--glow);
+            border: 2px solid var(--accent);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--accent);
+            text-shadow: var(--glow);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 255, 157, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 157, 0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .payment-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .submit-btn {
+                grid-column: span 1;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+                <h1>Next Grow</h1>
+            </div>
+        </header>
+        
+        <!-- Auth Section -->
+        <div id="auth-section" class="auth-container">
+            <div class="auth-box">
+                <h2 class="auth-title">Welcome to Next Grow</h2>
+                <p class="auth-subtitle">Accelerate your social media growth with our premium services. Sign in to get started.</p>
+                <button id="google-login" class="google-btn">
+                    <i class="fab fa-google"></i> Sign in with Google
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main App (hidden until login) -->
+        <div id="app-section" style="display: none;">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h2 id="user-name">User Name</h2>
+                        <p id="user-email">user@example.com</p>
+                    </div>
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">Your Balance</div>
+                    <div class="balance-amount">₹<span id="user-balance">0.00</span></div>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="services">Services</button>
+                <button class="nav-tab" data-tab="add-funds">Add Funds</button>
+                <button class="nav-tab" data-tab="orders">Track Orders</button>
+            </div>
+            
+            <!-- Services Section -->
+            <div id="services-section">
+                <div class="services-grid" id="services-container">
+                    <!-- Services will be dynamically added here -->
+                </div>
+            </div>
+            
+            <!-- Add Funds Section -->
+            <div id="add-funds-section" style="display: none;">
+                <div class="add-funds-container">
+                    <h2 class="section-title"><i class="fas fa-wallet"></i> Add Funds to Your Account</h2>
+                    
+                    <div class="qr-container">
+                        <div class="qr-code" id="qr-code">
+                            <div class="qr-placeholder">QR Code will appear here after admin setup</div>
+                        </div>
+                        <div class="min-deposit">Minimum Deposit: ₹10</div>
+                    </div>
+                    
+                    <form id="deposit-form">
+                        <div class="payment-form">
+                            <div class="form-group">
+                                <label class="form-label">Amount (₹)</label>
+                                <input type="number" class="form-input" id="deposit-amount" min="10" required placeholder="Enter amount">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">UTR Number</label>
+                                <input type="text" class="form-input" id="utr-number" required placeholder="Enter UTR number">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label">Payment Screenshot (URL)</label>
+                                <input type="text" class="form-input" id="payment-screenshot" required placeholder="Enter screenshot URL">
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">Submit Payment Details</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Orders Section -->
+            <div id="orders-section" style="display: none;">
+                <div class="orders-container">
+                    <h2 class="section-title"><i class="fas fa-history"></i> Your Order History</h2>
+                    
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-list">
+                            <!-- Orders will be dynamically added here -->
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 30px;">No orders yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support Button -->
+        <button class="support-btn" id="support-btn">
+            <i class="fab fa-whatsapp"></i>
+        </button>
+    </div>
+    
+    <!-- Order Modal -->
+    <div id="order-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
+            <h2 class="modal-title">Place Your Order</h2>
+            
+            <div id="service-details">
+                <!-- Service details will be dynamically added here -->
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Quantity (Min: <span id="min-quantity">0</span>)</label>
+                <input type="number" class="form-input" id="order-quantity" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Target URL/Username</label>
+                <input type="text" class="form-input" id="order-target" required placeholder="Enter your profile URL">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Total Price: ₹<span id="total-price">0.00</span></label>
+            </div>
+            
+            <button id="place-order" class="submit-btn">Place Order</button>
+        </div>
+    </div>
+    
+    <!-- Popup Alert -->
+    <div id="popup-alert" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <button class="close-popup" id="close-popup"><i class="fas fa-times"></i></button>
+            <h2 class="popup-title">Important Announcement</h2>
+            <p class="popup-message" id="alert-message">This is an important message from the admin.</p>
+            <button class="submit-btn" id="confirm-alert">Got It!</button>
+        </div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxNdlkjZiRYuB4_CZK093x0_K653LBEA4",
+            authDomain: "mixysmm.firebaseapp.com",
+            databaseURL: "https://mixysmm-default-rtdb.firebaseio.com",
+            projectId: "mixysmm",
+            storageBucket: "mixysmm.firebasestorage.app",
+            messagingSenderId: "859627558817",
+            appId: "1:859627558817:web:3de00ea2ca10f2b7625de0",
+            measurementId: "G-38JMDFW99M"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        
+        // DOM Elements
+        const authSection = document.getElementById('auth-section');
+        const appSection = document.getElementById('app-section');
+        const googleLoginBtn = document.getElementById('google-login');
+        const userName = document.getElementById('user-name');
+        const userEmail = document.getElementById('user-email');
+        const userAvatar = document.getElementById('user-avatar');
+        const userBalance = document.getElementById('user-balance');
+        const servicesContainer = document.getElementById('services-container');
+        const ordersList = document.getElementById('orders-list');
+        const depositForm = document.getElementById('deposit-form');
+        const supportBtn = document.getElementById('support-btn');
+        const orderModal = document.getElementById('order-modal');
+        const closeModal = document.getElementById('close-modal');
+        const serviceDetails = document.getElementById('service-details');
+        const minQuantity = document.getElementById('min-quantity');
+        const orderQuantity = document.getElementById('order-quantity');
+        const totalPrice = document.getElementById('total-price');
+        const placeOrderBtn = document.getElementById('place-order');
+        const popupAlert = document.getElementById('popup-alert');
+        const closePopup = document.getElementById('close-popup');
+        const alertMessage = document.getElementById('alert-message');
+        const confirmAlert = document.getElementById('confirm-alert');
+        const navTabs = document.querySelectorAll('.nav-tab');
+        
+        // Global variables
+        let currentUser = null;
+        let selectedService = null;
+        let servicesData = [];
+        
+        // Initialize the app
+        function initApp() {
+            // Check auth state
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in
+                    currentUser = user;
+                    showAppSection();
+                    loadUserData();
+                    loadServices();
+                    loadOrders();
+                    checkPopupAlert();
+                } else {
+                    // User is signed out
+                    showAuthSection();
+                }
+            });
+            
+            // Google login
+            googleLoginBtn.addEventListener('click', googleLogin);
+            
+            // Navigation tabs
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show the corresponding section
+                    const tabName = tab.getAttribute('data-tab');
+                    document.querySelectorAll('#app-section > div').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    document.getElementById(`${tabName}-section`).style.display = 'block';
+                });
+            });
+            
+            // Support button
+            supportBtn.addEventListener('click', () => {
+                window.open('https://wa.me/918178658156', '_blank');
+            });
+            
+            // Order modal
+            closeModal.addEventListener('click', () => {
+                orderModal.style.display = 'none';
+            });
+            
+            // Order quantity change
+            orderQuantity.addEventListener('input', calculateTotal);
+            
+            // Place order
+            placeOrderBtn.addEventListener('click', placeOrder);
+            
+            // Deposit form
+            depositForm.addEventListener('submit', submitDeposit);
+            
+            // Popup alert
+            closePopup.addEventListener('click', () => {
+                popupAlert.style.display = 'none';
+            });
+            
+            confirmAlert.addEventListener('click', () => {
+                popupAlert.style.display = 'none';
+            });
+        }
+        
+        // Google login function
+        function googleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    // Create/update user in database
+                    const user = result.user;
+                    const userRef = database.ref('users/' + user.uid);
+                    
+                    userRef.once('value').then(snapshot => {
+                        if (!snapshot.exists()) {
+                            // New user - create record
+                            userRef.set({
+                                name: user.displayName,
+                                email: user.email,
+                                balance: 0,
+                                createdAt: firebase.database.ServerValue.TIMESTAMP
+                            });
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Google login error:", error);
+                    alert("Login failed: " + error.message);
+                });
+        }
+        
+        // Show authentication section
+        function showAuthSection() {
+            authSection.style.display = 'flex';
+            appSection.style.display = 'none';
+        }
+        
+        // Show app section
+        function showAppSection() {
+            authSection.style.display = 'none';
+            appSection.style.display = 'block';
+        }
+        
+        // Load user data
+        function loadUserData() {
+            // Display user info
+            userName.textContent = currentUser.displayName || "User";
+            userEmail.textContent = currentUser.email;
+            
+            // Set avatar
+            if (currentUser.photoURL) {
+                userAvatar.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;">`;
+            }
+            
+            // Load balance
+            const userRef = database.ref('users/' + currentUser.uid);
+            userRef.on('value', snapshot => {
+                const userData = snapshot.val();
+                if (userData && userData.balance) {
+                    userBalance.textContent = userData.balance.toFixed(2);
+                }
+            });
+        }
+        
+        // Load services from Firebase
+        function loadServices() {
+            const servicesRef = database.ref('services');
+            servicesRef.on('value', snapshot => {
+                servicesData = [];
+                servicesContainer.innerHTML = '';
+                
+                snapshot.forEach(childSnapshot => {
+                    const service = childSnapshot.val();
+                    service.id = childSnapshot.key;
+                    servicesData.push(service);
+                    
+                    // Create service card
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'service-card';
+                    serviceCard.innerHTML = `
+                        <div class="service-icon">
+                            <i class="fab fa-${getServiceIcon(service.buttonName)}"></i>
+                        </div>
+                        <h3 class="service-name">${service.buttonName}</h3>
+                        <p class="service-description">${service.description}</p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Min Quantity</div>
+                                <div class="detail-value">${service.minQuantity}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Price per 10</div>
+                                <div class="detail-value">₹${service.pricePer10.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <button class="order-btn" data-id="${service.id}">
+                            <i class="fas fa-shopping-cart"></i> Order Now
+                        </button>
+                    `;
+                    
+                    servicesContainer.appendChild(serviceCard);
+                });
+                
+                // Add event listeners to order buttons
+                document.querySelectorAll('.order-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const serviceId = e.target.closest('.order-btn').getAttribute('data-id');
+                        openOrderModal(serviceId);
+                    });
+                });
+            });
+        }
+        
+        // Get icon based on service name
+        function getServiceIcon(serviceName) {
+            if (serviceName.includes('Instagram')) return 'instagram';
+            if (serviceName.includes('Facebook')) return 'facebook';
+            if (serviceName.includes('YouTube')) return 'youtube';
+            if (serviceName.includes('Twitter')) return 'twitter';
+            if (serviceName.includes('TikTok')) return 'tiktok';
+            return 'shopping-cart';
+        }
+        
+        // Open order modal
+        function openOrderModal(serviceId) {
+            selectedService = servicesData.find(service => service.id === serviceId);
+            
+            if (!selectedService) return;
+            
+            // Update modal content
+            serviceDetails.innerHTML = `
+                <h3>${selectedService.buttonName}</h3>
+                <p>${selectedService.description}</p>
+                <div class="service-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Min Quantity</div>
+                        <div class="detail-value">${selectedService.minQuantity}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Price per 10</div>
+                        <div class="detail-value">₹${selectedService.pricePer10.toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+            
+            minQuantity.textContent = selectedService.minQuantity;
+            orderQuantity.value = selectedService.minQuantity;
+            orderQuantity.min = selectedService.minQuantity;
+            calculateTotal();
+            
+            // Show modal
+            orderModal.style.display = 'flex';
+        }
+        
+        // Calculate total price
+        function calculateTotal() {
+            if (!selectedService) return;
+            
+            const quantity = parseInt(orderQuantity.value) || selectedService.minQuantity;
+            const price = (quantity * selectedService.pricePer10) / 10;
+            totalPrice.textContent = price.toFixed(2);
+        }
+        
+        // Place order
+        function placeOrder() {
+            if (!selectedService || !currentUser) return;
+            
+            const quantity = parseInt(orderQuantity.value) || selectedService.minQuantity;
+            const target = document.getElementById('order-target').value;
+            const price = (quantity * selectedService.pricePer10) / 10;
+            
+            // Check balance
+            const userRef = database.ref('users/' + currentUser.uid);
+            userRef.once('value').then(snapshot => {
+                const userData = snapshot.val();
+                if (userData.balance < price) {
+                    alert('Insufficient balance. Please add funds to your account.');
+                    return;
+                }
+                
+                // Deduct balance
+                const newBalance = userData.balance - price;
+                userRef.update({ balance: newBalance });
+                
+                // Create order
+                const ordersRef = database.ref('orders').push();
+                ordersRef.set({
+                    userId: currentUser.uid,
+                    serviceId: selectedService.id,
+                    serviceName: selectedService.buttonName,
+                    quantity: quantity,
+                    price: price,
+                    target: target,
+                    status: 'Pending',
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+                
+                // Call API (simulated)
+                callServiceAPI(selectedService, quantity, target);
+                
+                // Close modal and reset
+                orderModal.style.display = 'none';
+                document.getElementById('order-target').value = '';
+                alert('Order placed successfully!');
+            });
+        }
+        
+        // Simulate API call to service provider
+        function callServiceAPI(service, quantity, target) {
+            console.log(`Calling service API: ${service.apiUrl} with key ${service.apiKey}`);
+            console.log(`Order details: ${quantity} ${service.buttonName} for ${target}`);
+            // In a real implementation, this would be an actual API call
+        }
+        
+        // Load user orders
+        function loadOrders() {
+            const ordersRef = database.ref('orders').orderByChild('userId').equalTo(currentUser.uid);
+            ordersRef.on('value', snapshot => {
+                ordersList.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    ordersList.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px;">No orders yet</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(childSnapshot => {
+                    const order = childSnapshot.val();
+                    const date = new Date(order.timestamp).toLocaleDateString();
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${order.serviceName}</td>
+                        <td>${order.quantity}</td>
+                        <td>₹${order.price.toFixed(2)}</td>
+                        <td>${date}</td>
+                        <td class="status-${order.status.toLowerCase()}">${order.status}</td>
+                    `;
+                    ordersList.appendChild(row);
+                });
+            });
+        }
+        
+        // Submit deposit
+        function submitDeposit(e) {
+            e.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+            const utr = document.getElementById('utr-number').value;
+            const screenshot = document.getElementById('payment-screenshot').value;
+            
+            if (amount < 10) {
+                alert('Minimum deposit amount is ₹10');
+                return;
+            }
+            
+            // Create deposit request
+            const depositsRef = database.ref('deposits').push();
+            depositsRef.set({
+                userId: currentUser.uid,
+                amount: amount,
+                utr: utr,
+                screenshot: screenshot,
+                status: 'Pending',
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+            
+            // Reset form
+            depositForm.reset();
+            alert('Deposit request submitted! It will be processed within 24 hours.');
+        }
+        
+        // Check for popup alerts
+        function checkPopupAlert() {
+            const alertRef = database.ref('popup_alert');
+            alertRef.on('value', snapshot => {
+                const alertData = snapshot.val();
+                if (alertData && alertData.isActive) {
+                    alertMessage.textContent = alertData.message;
+                    popupAlert.style.display = 'flex';
+                }
+            });
+        }
+        
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
