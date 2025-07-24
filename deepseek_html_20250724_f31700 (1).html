@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="https://skinstagrow.store">
+  <title>Next Grow</title>
+<meta property="og:title" content="Next Grow" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="Social Media Marketing, Instagram Growth, Facebook Services, YouTube Promotion">
+<meta name="description" content="Next Grow - Premium Social Media Marketing Services for Instagram, Facebook, YouTube and more">
+<meta property="og:description" content="Next Grow - Premium Social Media Marketing Services for Instagram, Facebook, YouTube and more" />
+<meta name="google-site-verification" content="" />
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <link rel="stylesheet" type="text/css" href="https://skinstagrow.store/assets/cj7/custom.css">
+		
+<!-- CDN Links for plugins -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+
+<!-- Clash Display Font CDN -->
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,700,500,600,1,300&display=swap" rel="stylesheet">
+<!-- Poppins Font CDN From Google -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* New Firebase Auth Styles */
+.firebase-auth-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.firebase-auth-box {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    padding: 40px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 30px rgba(106, 17, 203, 0.7);
+    text-align: center;
+    border: 1px solid #6a11cb;
+}
+
+.firebase-auth-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #00ff9d;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.8);
+}
+
+.firebase-auth-subtitle {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #fff;
+    opacity: 0.8;
+}
+
+.google-auth-btn {
+    background: #fff;
+    color: #4285F4;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+}
+
+.google-auth-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(66, 133, 244, 0.6);
+}
+
+/* User Dashboard Styles */
+.user-dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 255, 157, 0.8);
+}
+
+.user-balance {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 0 15px rgba(106, 17, 203, 0.7);
+}
+
+/* Order Modal Styles */
+.order-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(5px);
+}
+
+.order-modal-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border-radius: 15px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 30px rgba(106, 17, 203, 0.7);
+    border: 1px solid #6a11cb;
+}
+
+.order-modal-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #00ff9d;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.8);
+}
+
+.order-form-group {
+    margin-bottom: 20px;
+}
+
+.order-form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.order-form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(106, 17, 203, 0.5);
+    background: rgba(15, 12, 41, 0.3);
+    color: white;
+    font-size: 16px;
+}
+
+.order-form-input:focus {
+    outline: none;
+    border-color: #00ff9d;
+    box-shadow: 0 0 10px rgba(0, 255, 157, 0.8);
+}
+
+.order-submit-btn {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(106, 17, 203, 0.7);
+}
+
+.order-submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(106, 17, 203, 0.9);
+}
+
+/* Funds Page Styles */
+.funds-container {
+    background: rgba(15, 12, 41, 0.6);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px 0;
+    box-shadow: 0 0 15px rgba(106, 17, 203, 0.7);
+    border: 1px solid #6a11cb;
+}
+
+.funds-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #00ff9d;
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.8);
+}
+
+.qr-code-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.qr-code-placeholder {
+    width: 200px;
+    height: 200px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.deposit-form {
+    margin-top: 20px;
+}
+
+/* Orders Page Styles */
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.orders-table th {
+    background: rgba(106, 17, 203, 0.3);
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid #00ff9d;
+}
+
+.orders-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.status-pending {
+    color: #ffcc00;
+}
+
+.status-completed {
+    color: #00ff9d;
+}
+
+/* Admin Alert Styles */
+.admin-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(106, 17, 203, 0.7);
+    z-index: 999;
+    max-width: 300px;
+    display: none;
+}
+
+/* Support Button Styles */
+.support-float-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 0 20px rgba(106, 17, 203, 0.7);
+    cursor: pointer;
+    z-index: 99;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(106, 17, 203, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(106, 17, 203, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(106, 17, 203, 0); }
+}
+
+/* Hide elements when not authenticated */
+.hide-if-logged-in {
+    display: none;
+}
+
+.show-if-logged-in {
+    display: block;
+}
+</style>
+</head>
+
+<body>
+    <!-- Firebase Auth Container (Hidden when logged in) -->
+    <div id="firebase-auth-container" class="firebase-auth-container hide-if-logged-in">
+        <div class="firebase-auth-box">
+            <h2 class="firebase-auth-title">Welcome to Next Grow</h2>
+            <p class="firebase-auth-subtitle">Sign in with Google to access our premium SMM services</p>
+            <button id="google-signin-btn" class="google-auth-btn">
+                <i class="fab fa-google"></i> Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <a href="/">
+                        <img src="img/panel/a4300b002bcfb71f291dac175d52df94.png" class="mobile-logo" style="width: 150px;" alt="Next Grow">
+                    </a>
+                </div>
+                <div class="col-auto">
+                    <button class="menu-btn" onclick="noAuthMenuToggle();">
+                        <i class="ri-menu-line"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header id="noAuthHeader">
+        <button class="close-menu" onclick="noAuthMenuToggle();">
+            <i class="ri-close-line"></i>
+        </button>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-auto logo_with_lang">
+                    <a href="/" class="hdLogoL">
+                        <img src="img/panel/a4300b002bcfb71f291dac175d52df94.png" style="width: 150px;" alt="Next Grow">
+                    </a>
+                </div>
+                <div class="col-lg">
+                    <ul class="hdMn">
+                        <li class="hdMnIt">
+                            <a class="hdMnLi" href="/">Home</a>
+                        </li>
+                        <li class="hdMnIt">
+                            <a class="hdMnLi" href="/services">Services</a>
+                        </li>
+                        <li class="hdMnIt">
+                            <a class="hdMnLi" href="/api">API</a>
+                        </li>
+                        <li class="hdMnIt show-if-logged-in">
+                            <a class="hdMnLi" href="#" id="funds-tab">Add Funds</a>
+                        </li>
+                        <li class="hdMnIt show-if-logged-in">
+                            <a class="hdMnLi" href="#" id="orders-tab">My Orders</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-auto">
+                    <div id="auth-buttons" class="hide-if-logged-in">
+                        <a href="/" class="btn btn-login-header btlrh btn-rounded me-3">Login</a>
+                        <a href="/signup" class="btn btn-primary btlrh btn-rounded btn-icon">
+                            <span>Register</span>
+                            <span class="icon icon-circle"><i class="ri-arrow-right-line"></i></span>
+                        </a>
+                    </div>
+                    <div id="user-profile" class="show-if-logged-in" style="display: none;">
+                        <div class="user-info">
+                            <div class="user-avatar" id="user-avatar">U</div>
+                            <div>
+                                <div id="user-name">User</div>
+                                <div class="user-balance">₹<span id="user-balance">0.00</span></div>
+                            </div>
+                            <button id="logout-btn" class="btn btn-danger btn-sm ms-3">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="notAuthed">
+        <style>
+            #notAuthed {
+                padding: 0px!important;
+            }
+        </style>
+
+        <!-- Banner Section -->
+        <section id="banner">
+            <div class="naHead">
+                <div class="naHdCt">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <div class="sbadge">
+                                    <span class="icon">🚀</span>
+                                    <span class="text">Fastest Services on Market</span>
+                                </div>
+                                <h1 class="naHdTi">
+                                    Next Grow<br>
+                                    Boost Your <span class="naHdSt">Social Media</span>
+                                    With In A Minute
+                                </h1>
+                                <p class="naHdTx">
+                                    Our platform is a powerful tool designed to help you increase your social media presence and reach. With features such as automatic post scheduling, real-time analytics, and targeted audience engagement, you can easily manage and grow your social media accounts.
+                                </p>
+                                <div class="row mt-4 pt-2 pb-md-5 mb-4 mb-md-5">
+                                    <div class="col-12 col-md-auto mb-3 mb-md-0">
+                                        <a href="/signup" class="btn btn-primary btn-rounded btn-icon btn-100 hide-if-logged-in">
+                                            <span class="text">Sign Up Now</span>
+                                            <span class="icon"><i class="ri-arrow-right-up-line"></i></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-auto">
+                                        <a href="/services" class="btn btn-rounded btn-icon btn-100">
+                                            <span class="icon iconify"><iconify-icon icon="lucide:server-crash"></iconify-icon></span>
+                                            <span class="text">See All Services</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="naHdBt d-none d-md-block" id="naLog">
+                                    <div class="row">
+                                        <div class="col-lg">
+                                            <div class="naHItW">
+                                                <div class="naHIt">
+                                                    <div class="star"><i class="ri-star-fill"></i></div>
+                                                    <div class="text"><strong>4.97</strong> Average Rating</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 offset-lg-0 d-none d-lg-block">
+                                <img src="https://storage.perfectcdn.com/6f7slz/jd7xmobnjdlu0eun.webp" class="naHdIm" alt="Phone">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Part -->
+            <section class="naLog hide-if-logged-in">
+                <div class="container">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="naLogTi mb-3">Welcome to Next Grow! Please enter your login credentials below to access your account.</h3>
+                            <form method="post" action="/">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-12 mb-4 mb-lg-0">
+                                                <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="Username">
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-12 mb-4 mb-lg-0">
+                                                <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Password">
+                                            </div>
+                                        </div>
+                                    </div>            
+                                    <div class="col-lg-3 col-12 mb-4">
+                                        <input type="hidden" name="csrf_token" value="">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-100 btn-icon">
+                                            <span class="text">Sign in</span>
+                                            <span class="icon iconify text-white">
+                                                <iconify-icon icon="ph:users-duotone"></iconify-icon>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center">
+                                    <div class="col-lg-4 col-md-6 col-12 mb-2 mb-lg-0">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" name="remember" id="remember" checked="">
+                                            <label class="form-check-label mb-0" for="flexCheckChecked">Remember me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-12 mb-3 text-center text-md-start mb-lg-0">
+                                        <div class="naLogTx"><a href="/resetpassword">Forgot password??</a></div>
+                                    </div>
+                                    <div class="col-lg-4 col-12 text-center text-lg-end">
+                                        <div class="naLogTx">Do not have an account? <a href="/signup">Sign up</a></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Services Section -->
+        <section class="noaOuFe home-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="platform_content">
+                            <h2>Best and cheapest services for <span class="naHdSt">Facebook, Instagram, TikTok, Twitter</span> and many more.</h2>
+                            <p class="noaTx">Here you can see a small selection of services that Next Grow offers our customers. It doesn't matter for which social media channel you need a "push", we will help you to achieve your desired goals safely, fast and cheapest.</p>
+                            <h6 class="noaTTl">
+                                <strong>
+                                    ✅ Best & Cheapest TikTok Services!<br>
+                                    ✅ Cheapest price for Instagram followers!<br>
+                                    ✅ Cheap services for Facebook services!<br>
+                                    ✅ Best traffic service for your website!<br>
+                                    ✅ Twitter Tweets and Follows at low prices!<br>
+                                    ✅ Best provider in all areas!
+                                </strong>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Platform -->
+        <section id="services-platform">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="services-container">
+                            <!-- Services will be loaded here from Firebase -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Funds Section (Hidden by default) -->
+        <section id="add-funds-section" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="funds-container">
+                            <h2 class="funds-title"><i class="fas fa-wallet"></i> Add Funds to Your Account</h2>
+                            <div class="qr-code-container">
+                                <div class="qr-code-placeholder" id="qr-code">
+                                    QR Code will appear here
+                                </div>
+                                <p>Minimum deposit: ₹10</p>
+                            </div>
+                            <form class="deposit-form" id="deposit-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Amount (₹)</label>
+                                            <input type="number" class="form-control" id="deposit-amount" min="10" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">UTR Number</label>
+                                            <input type="text" class="form-control" id="utr-number" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Payment Screenshot URL</label>
+                                            <input type="text" class="form-control" id="payment-screenshot" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary btn-block">Submit Payment</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Orders Section (Hidden by default) -->
+        <section id="orders-section" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="funds-container">
+                            <h2 class="funds-title"><i class="fas fa-history"></i> Your Order History</h2>
+                            <table class="orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-list">
+                                    <!-- Orders will be loaded here from Firebase -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="order-modal" class="order-modal-overlay" style="display: none;">
+        <div class="order-modal-content">
+            <button id="close-order-modal" style="background: none; border: none; position: absolute; top: 15px; right: 15px; color: #fff; font-size: 20px;">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="order-modal-title">Place Your Order</h2>
+            <div id="service-details">
+                <!-- Service details will be loaded here -->
+            </div>
+            <div class="order-form-group">
+                <label class="order-form-label">Quantity (Min: <span id="min-quantity">0</span>)</label>
+                <input type="number" class="order-form-input" id="order-quantity" min="0" required>
+            </div>
+            <div class="order-form-group">
+                <label class="order-form-label">Target URL/Username</label>
+                <input type="text" class="order-form-input" id="order-target" required>
+            </div>
+            <div class="order-form-group">
+                <label class="order-form-label">Total Price: ₹<span id="total-price">0.00</span></label>
+            </div>
+            <button id="place-order-btn" class="order-submit-btn">Place Order</button>
+        </div>
+    </div>
+
+    <!-- Admin Alert -->
+    <div id="admin-alert" class="admin-alert">
+        <div id="admin-alert-message">Important announcement from admin</div>
+        <button id="close-alert" style="background: none; border: none; color: white; position: absolute; top: 5px; right: 5px;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Support Button -->
+    <div class="support-float-btn" id="support-float-btn">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxNdlkjZiRYuB4_CZK093x0_K653LBEA4",
+            authDomain: "mixysmm.firebaseapp.com",
+            databaseURL: "https://mixysmm-default-rtdb.firebaseio.com",
+            projectId: "mixysmm",
+            storageBucket: "mixysmm.appspot.com",
+            messagingSenderId: "859627558817",
+            appId: "1:859627558817:web:3de00ea2ca10f2b7625de0",
+            measurementId: "G-38JMDFW99M"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        // DOM Elements
+        const firebaseAuthContainer = document.getElementById('firebase-auth-container');
+        const googleSigninBtn = document.getElementById('google-signin-btn');
+        const authButtons = document.getElementById('auth-buttons');
+        const userProfile = document.getElementById('user-profile');
+        const userName = document.getElementById('user-name');
+        const userAvatar = document.getElementById('user-avatar');
+        const userBalance = document.getElementById('user-balance');
+        const logoutBtn = document.getElementById('logout-btn');
+        const servicesContainer = document.getElementById('services-container');
+        const orderModal = document.getElementById('order-modal');
+        const closeOrderModal = document.getElementById('close-order-modal');
+        const serviceDetails = document.getElementById('service-details');
+        const minQuantity = document.getElementById('min-quantity');
+        const orderQuantity = document.getElementById('order-quantity');
+        const totalPrice = document.getElementById('total-price');
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        const orderTarget = document.getElementById('order-target');
+        const addFundsSection = document.getElementById('add-funds-section');
+        const ordersSection = document.getElementById('orders-section');
+        const fundsTab = document.getElementById('funds-tab');
+        const ordersTab = document.getElementById('orders-tab');
+        const depositForm = document.getElementById('deposit-form');
+        const depositAmount = document.getElementById('deposit-amount');
+        const utrNumber = document.getElementById('utr-number');
+        const paymentScreenshot = document.getElementById('payment-screenshot');
+        const ordersList = document.getElementById('orders-list');
+        const qrCode = document.getElementById('qr-code');
+        const adminAlert = document.getElementById('admin-alert');
+        const adminAlertMessage = document.getElementById('admin-alert-message');
+        const closeAlert = document.getElementById('close-alert');
+        const supportFloatBtn = document.getElementById('support-float-btn');
+
+        // Global variables
+        let currentUser = null;
+        let selectedService = null;
+        let servicesData = [];
+
+        // Initialize the app
+        function initApp() {
+            // Check auth state
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in
+                    currentUser = user;
+                    showAppContent();
+                    loadUserData();
+                    loadServices();
+                    loadOrders();
+                    checkAdminAlert();
+                } else {
+                    // User is signed out
+                    showAuthContent();
+                }
+            });
+
+            // Event listeners
+            googleSigninBtn.addEventListener('click', signInWithGoogle);
+            logoutBtn.addEventListener('click', signOut);
+            closeOrderModal.addEventListener('click', () => orderModal.style.display = 'none');
+            orderQuantity.addEventListener('input', calculateTotal);
+            placeOrderBtn.addEventListener('click', placeOrder);
+            fundsTab.addEventListener('click', showFundsSection);
+            ordersTab.addEventListener('click', showOrdersSection);
+            depositForm.addEventListener('submit', submitDeposit);
+            closeAlert.addEventListener('click', () => adminAlert.style.display = 'none');
+            supportFloatBtn.addEventListener('click', () => window.open('https://wa.me/918178658156', '_blank'));
+        }
+
+        // Sign in with Google
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    // Create/update user in database
+                    const user = result.user;
+                    const userRef = database.ref('users/' + user.uid);
+                    
+                    userRef.once('value').then(snapshot => {
+                        if (!snapshot.exists()) {
+                            // New user - create record
+                            userRef.set({
+                                name: user.displayName,
+                                email: user.email,
+                                balance: 0,
+                                createdAt: firebase.database.ServerValue.TIMESTAMP
+                            });
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Google sign-in error:", error);
+                    alert("Sign-in failed: " + error.message);
+                });
+        }
+
+        // Sign out
+        function signOut() {
+            auth.signOut().then(() => {
+                // Sign-out successful
+                showAuthContent();
+            }).catch(error => {
+                console.error("Sign-out error:", error);
+            });
+        }
+
+        // Show app content when authenticated
+        function showAppContent() {
+            firebaseAuthContainer.classList.add('hide-if-logged-in');
+            document.querySelectorAll('.hide-if-logged-in').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.show-if-logged-in').forEach(el => el.style.display = 'block');
+            userProfile.style.display = 'flex';
+            authButtons.style.display = 'none';
+        }
+
+        // Show auth content when not authenticated
+        function showAuthContent() {
+            firebaseAuthContainer.classList.remove('hide-if-logged-in');
+            document.querySelectorAll('.hide-if-logged-in').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.show-if-logged-in').forEach(el => el.style.display = 'none');
+            userProfile.style.display = 'none';
+            authButtons.style.display = 'block';
+            addFundsSection.style.display = 'none';
+            ordersSection.style.display = 'none';
+        }
+
+        // Load user data
+        function loadUserData() {
+            // Display user info
+            userName.textContent = currentUser.displayName || "User";
+            
+            // Set avatar
+            if (currentUser.photoURL) {
+                userAvatar.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;">`;
+            } else {
+                userAvatar.textContent = currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'U';
+            }
+
+            // Load balance
+            const userRef = database.ref('users/' + currentUser.uid);
+            userRef.on('value', snapshot => {
+                const userData = snapshot.val();
+                if (userData && userData.balance) {
+                    userBalance.textContent = userData.balance.toFixed(2);
+                }
+            });
+        }
+
+        // Load services from Firebase
+        function loadServices() {
+            const servicesRef = database.ref('services');
+            servicesRef.on('value', snapshot => {
+                servicesData = [];
+                servicesContainer.innerHTML = '';
+                
+                snapshot.forEach(childSnapshot => {
+                    const service = childSnapshot.val();
+                    service.id = childSnapshot.key;
+                    servicesData.push(service);
+                    
+                    // Create service card
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'service-card';
+                    serviceCard.innerHTML = `
+                        <div class="service-icon">
+                            <i class="fab fa-${getServiceIcon(service.buttonName)}"></i>
+                        </div>
+                        <h3 class="service-name">${service.buttonName}</h3>
+                        <p class="service-description">${service.description}</p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Min Quantity</div>
+                                <div class="detail-value">${service.minQuantity}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Price per 10</div>
+                                <div class="detail-value">₹${service.pricePer10.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <button class="order-btn" data-id="${service.id}">
+                            <i class="fas fa-shopping-cart"></i> Order Now
+                        </button>
+                    `;
+                    
+                    servicesContainer.appendChild(serviceCard);
+                });
+                
+                // Add event listeners to order buttons
+                document.querySelectorAll('.order-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const serviceId = e.target.closest('.order-btn').getAttribute('data-id');
+                        openOrderModal(serviceId);
+                    });
+                });
+            });
+        }
+
+        // Get icon based on service name
+        function getServiceIcon(serviceName) {
+            if (serviceName.includes('Instagram')) return 'instagram';
+            if (serviceName.includes('Facebook')) return 'facebook';
+            if (serviceName.includes('YouTube')) return 'youtube';
+            if (serviceName.includes('Twitter')) return 'twitter';
+            if (serviceName.includes('TikTok')) return 'tiktok';
+            return 'shopping-cart';
+        }
+
+        // Open order modal
+        function openOrderModal(serviceId) {
+            selectedService = servicesData.find(service => service.id === serviceId);
+            
+            if (!selectedService) return;
+            
+            // Update modal content
+            serviceDetails.innerHTML = `
+                <h3>${selectedService.buttonName}</h3>
+                <p>${selectedService.description}</p>
+                <div class="service-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Min Quantity</div>
+                        <div class="detail-value">${selectedService.minQuantity}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Price per 10</div>
+                        <div class="detail-value">₹${selectedService.pricePer10.toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+            
+            minQuantity.textContent = selectedService.minQuantity;
+            orderQuantity.value = selectedService.minQuantity;
+            orderQuantity.min = selectedService.minQuantity;
+            calculateTotal();
+            
+            // Show modal
+            orderModal.style.display = 'flex';
+        }
+
+        // Calculate total price
+        function calculateTotal() {
+            if (!selectedService) return;
+            
+            const quantity = parseInt(orderQuantity.value) || selectedService.minQuantity;
+            const price = (quantity * selectedService.pricePer10) / 10;
+            totalPrice.textContent = price.toFixed(2);
+        }
+
+        // Place order
+        function placeOrder() {
+            if (!selectedService || !currentUser) return;
+            
+            const quantity = parseInt(orderQuantity.value) || selectedService.minQuantity;
+            const target = orderTarget.value;
+            const price = (quantity * selectedService.pricePer10) / 10;
+            
+            if (!target) {
+                alert('Please enter target URL/username');
+                return;
+            }
+            
+            // Check balance
+            const userRef = database.ref('users/' + currentUser.uid);
+            userRef.once('value').then(snapshot => {
+                const userData = snapshot.val();
+                if (userData.balance < price) {
+                    alert('Insufficient balance. Please add funds to your account.');
+                    return;
+                }
+                
+                // Deduct balance
+                const newBalance = userData.balance - price;
+                userRef.update({ balance: newBalance });
+                
+                // Create order
+                const ordersRef = database.ref('orders').push();
+                ordersRef.set({
+                    userId: currentUser.uid,
+                    serviceId: selectedService.id,
+                    serviceName: selectedService.buttonName,
+                    quantity: quantity,
+                    price: price,
+                    target: target,
+                    status: 'Pending',
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+                
+                // Call API (simulated)
+                callServiceAPI(selectedService, quantity, target);
+                
+                // Close modal and reset
+                orderModal.style.display = 'none';
+                orderTarget.value = '';
+                alert('Order placed successfully!');
+            });
+        }
+
+        // Simulate API call to service provider
+        function callServiceAPI(service, quantity, target) {
+            console.log(`Calling service API: ${service.apiUrl} with key ${service.apiKey}`);
+            console.log(`Order details: ${quantity} ${service.buttonName} for ${target}`);
+            // In a real implementation, this would be an actual API call
+        }
+
+        // Show funds section
+        function showFundsSection(e) {
+            e.preventDefault();
+            addFundsSection.style.display = 'block';
+            ordersSection.style.display = 'none';
+            
+            // Load QR code from Firebase
+            const qrRef = database.ref('payment_qr');
+            qrRef.once('value').then(snapshot => {
+                const qrData = snapshot.val();
+                if (qrData && qrData.url) {
+                    qrCode.innerHTML = `<img src="${qrData.url}" alt="Payment QR Code" style="width:100%;height:100%;">`;
+                }
+            });
+        }
+
+        // Show orders section
+        function showOrdersSection(e) {
+            e.preventDefault();
+            addFundsSection.style.display = 'none';
+            ordersSection.style.display = 'block';
+            loadOrders();
+        }
+
+        // Load user orders
+        function loadOrders() {
+            const ordersRef = database.ref('orders').orderByChild('userId').equalTo(currentUser.uid);
+            ordersRef.on('value', snapshot => {
+                ordersList.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    ordersList.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px;">No orders yet</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(childSnapshot => {
+                    const order = childSnapshot.val();
+                    const date = new Date(order.timestamp).toLocaleDateString();
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${order.serviceName}</td>
+                        <td>${order.quantity}</td>
+                        <td>₹${order.price.toFixed(2)}</td>
+                        <td>${date}</td>
+                        <td class="status-${order.status.toLowerCase()}">${order.status}</td>
+                    `;
+                    ordersList.appendChild(row);
+                });
+            });
+        }
+
+        // Submit deposit
+        function submitDeposit(e) {
+            e.preventDefault();
+            
+            const amount = parseFloat(depositAmount.value);
+            const utr = utrNumber.value;
+            const screenshot = paymentScreenshot.value;
+            
+            if (amount < 10) {
+                alert('Minimum deposit amount is ₹10');
+                return;
+            }
+            
+            if (!utr || !screenshot) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            // Create deposit request
+            const depositsRef = database.ref('deposits').push();
+            depositsRef.set({
+                userId: currentUser.uid,
+                amount: amount,
+                utr: utr,
+                screenshot: screenshot,
+                status: 'Pending',
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+            
+            // Reset form
+            depositForm.reset();
+            alert('Deposit request submitted! It will be processed within 24 hours.');
+        }
+
+        // Check for admin alerts
+        function checkAdminAlert() {
+            const alertRef = database.ref('popup_alert');
+            alertRef.on('value', snapshot => {
+                const alertData = snapshot.val();
+                if (alertData && alertData.message && alertData.isActive) {
+                    adminAlertMessage.textContent = alertData.message;
+                    adminAlert.style.display = 'block';
+                } else {
+                    adminAlert.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
